@@ -5,10 +5,16 @@ import { getGenreNames } from "../utils/GenreService";
 import styles from "./PodcastCard.module.css";
 
 /**
- * @component PodcastCard
- * @description Displays an individual podcast preview card.
- * @param {Object} props
- * @param {Object} props.podcast - Podcast data object.
+  * @param {Object} props
+ * @param {Object} props.podcast - The podcast data object to display.
+ * @param {string} props.podcast.id - Unique ID of the podcast.
+ * @param {string} props.podcast.title - Title of the podcast.
+ * @param {string} props.podcast.image - URL of the podcast image.
+ * @param {number} props.podcast.seasons - Number of seasons available.
+ * @param {string} props.podcast.updated - ISO date string for the last update.
+ * @param {Array<Object>} props.genres - Array of genre objects for mapping IDs to titles.
+ *
+ * @returns {JSX.Element} The rendered podcast card component.
  */
 export function PodcastCard({ podcast }) {
   const { setSelectedPodcast } = useContext(PodcastContext);
