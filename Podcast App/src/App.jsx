@@ -1,63 +1,66 @@
-import { useEffect, useState } from "react";
-import { PodcastProvider } from "./context/PodcastContext";
+import { useEffect, useContext } from "react";
+import { PodcastContext } from "./context/PodcastContext";
 import { fetchPodcasts } from "./api/fetchPodcasts";
-import { genres } from "./data";
-import Header from "./components/Header";
-import SearchBar from "./components/SearchBar";
-import SortSelect from "./components/SortSelect";
-import GenreFilter from "./components/GenreFilter";
-import PodcastGrid from "./components/PodcastGrid";
-import Pagination from "./components/Pagination";
+import { PodcastGrid } from "./components/PodcastGrid";
+import { Pagination } from "./components/Pagination";
+import { Header } from "./components/Header";
+import { Modal } from "./components/Modal";
 import styles from "./App.module.css";
 
 /**
- * Root component of the Podcast Explorer app.
- * Handles data fetching and layout composition.
+ * @component App
+ * @description Main application component that fetches podcasts on load and displays them in a responsive grid.
  */
 export default function App() {
-  const [podcasts, setPodcasts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { podcasts, setPodcasts, loading, setLoading, error, setError } =
+    useContext(PodcastContext);
 
   useEffect(() => {
-    fetchPodcasts(setPodcasts, setError, setLoading);
-  }, []);
+    /**
+     * Fetch podcast data from external API on initial load.
+     */
+    const getPodcasts = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await fetchPodcasts();
+        if (data.length > 0) {
+          setPodcasts(data);
+        } else {
+          setError("No podcasts found.");
+        }
+      } catch (err) {
+        setError("Failed to load podcasts. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getPodcasts();
+  }, [setPodcasts, setLoading, setError]);
 
   return (
-    <>
+    <div className={styles.app}>
       <Header />
 
-      <PodcastProvider initialPodcasts={podcasts}>
-        <main className={styles.main}>
-          <section className={styles.controls}>
-            <SearchBar />
-            <GenreFilter genres={genres} />
-            <SortSelect />
-          </section>
+      {loading && <p className={styles.message}>Loading podcasts...</p>}
 
-          {loading && (
-            <div className={styles.messageContainer}>
-              <div className={styles.spinner}></div>
-              <p>Loading podcasts...</p>
-            </div>
-          )}
+      {error && !loading && <p className={styles.error}>{error}</p>}
 
-          {error && (
-            <div className={styles.message}>
-              <div className={styles.error}>
-                Error occurred while fetching podcasts: {error}
-              </div>
-            </div>
-          )}
+      {!loading && !error && podcasts.length === 0 && (
+        <p className={styles.message}>No podcasts available.</p>
+      )}
 
-          {!loading && !error && (
-            <>
-              <PodcastGrid genres={genres} />
-              <Pagination />
-            </>
-          )}
-        </main>
-      </PodcastProvider>
-    </>
+      {!loading && !error && podcasts.length > 0 && <PodcastGrid />}
+
+      {!loading && !error && podcasts.length > 0 && <Pagination />}
+    </div>
   );
 }
+
+const { podcasts, setPodcasts, loading, setLoading, error, setError, selectedPodcast, setSelectedPodcast } =
+  useContext(PodcastContext);
+  
+{selectedPodcast && (
+  <Modal podcast={selectedPodcast} onClose={() => setSelectedPodcast(null)} />
+)}
