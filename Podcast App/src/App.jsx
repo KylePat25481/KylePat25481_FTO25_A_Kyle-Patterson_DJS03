@@ -4,7 +4,6 @@ import { fetchPodcasts } from "./api/fetchPodcasts";
 import { PodcastGrid } from "./components/PodcastGrid";
 import { Pagination } from "./components/Pagination";
 import { Header } from "./components/Header";
-import { Modal } from "./components/Modal";
 import styles from "./App.module.css";
 
 /**
@@ -57,10 +56,3 @@ export default function App() {
     </div>
   );
 }
-
-const { podcasts, setPodcasts, loading, setLoading, error, setError, selectedPodcast, setSelectedPodcast } =
-  useContext(PodcastContext);
-  
-{selectedPodcast && (
-  <Modal podcast={selectedPodcast} onClose={() => setSelectedPodcast(null)} />
-)}
