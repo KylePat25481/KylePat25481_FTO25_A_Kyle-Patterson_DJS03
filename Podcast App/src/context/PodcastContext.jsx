@@ -45,26 +45,3 @@ export function PodcastProvider({ children }) {
     </PodcastContext.Provider>
   );
 }
-
-// add inside PodcastProvider
-const [selectedPodcast, setSelectedPodcast] = useState(null);
-
-<PodcastContext.Provider
-  value={{
-    podcasts,
-    setPodcasts,
-    loading,
-    setLoading,
-    error,
-    setError,
-    currentPage,
-    setCurrentPage,
-    totalPages,
-    paginatedPodcasts,
-    selectedPodcast,
-    setSelectedPodcast, // added
-  }}
->
-  {children}
-</PodcastContext.Provider>
-
