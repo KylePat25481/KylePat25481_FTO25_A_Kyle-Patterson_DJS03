@@ -1,75 +1,143 @@
-# DJS03: React Podcast Landing Page
+# 🎙️ Podcast Explorer App
 
-## Overview
-
-In this project, you will build the landing page for a podcast discovery app using **React**. Your goal is to fetch podcast data from an external API and dynamically render a **responsive grid of podcast previews**. This project focuses on **data fetching**, **component structure**, **rendering logic**, and **layout styling**.
+A responsive React application for discovering, browsing, and exploring podcasts. Built using React Context for global state management, it fetches podcast data from a Netlify-hosted API and displays them with genre badges, images, and metadata.  
 
 ---
 
-## Core Objectives
+## **Table of Contents**
 
-- Fetch podcast data from an API: https://podcast-api.netlify.app/ on initial page load.
-- Display a loading indicator while data is being fetched, and handle errors or empty results with a clear user message.
-- Render a responsive **grid layout** of podcast previews using modular, reusable React components.
-- Pass podcast data into components via props and render each podcast card with the following:
-  - Podcast **image**
-  - Podcast **title**
-  - Number of **seasons**
-  - Associated **genre names**
-  - Formatted **last updated** date (e.g., "2 days ago")
-- Apply clean, consistent layout and styling across different screen sizes using CSS Grid or Flexbox.
-- Maintain high-quality, readable code with clear structure and **JSDoc comments** for key functions and components.
+- [Features](#features)  
+- [Installation](#installation)  
+- [Usage](#usage)  
+- [Project Structure](#project-structure)  
+- [Components](#components)  
+- [Utilities & Services](#utilities--services)  
+- [Styling](#styling)  
+- [API](#api)  
+- [License](#license)  
 
 ---
 
-## Technical Requirements
+## **Features**
 
-- Use **React functional components**
-- Use the **Fetch API**
-- Use `useEffect()` to fetch data once on mount
-- Use `useState()` to manage podcast data
-- Use `.map()` to dynamically render PodcastPreviewCard components
-- Format dates using `date-fns` or a custom formatter
-
----
-
-## Responsiveness Requirements
-
-- Must look good on:
-  - Desktop (≥1200px)
-  - Tablet (~768px)
-  - Mobile (~375px)
-- Use **CSS Grid** or **Flexbox**
-- Media queries or frameworks like **Tailwind CSS** are allowed
+- Fetches podcasts dynamically from a Netlify API  
+- Maps genre IDs to human-readable names using a local `GenreService`  
+- Displays podcasts in a responsive grid layout  
+- Individual podcast cards show:  
+  - Cover image  
+  - Title  
+  - Number of seasons  
+  - Genre badges  
+  - Last updated date  
+- Loading spinner while fetching data  
+- Error handling for failed API requests  
+- Context-based state management for scalable and maintainable architecture  
 
 ---
 
-## Deliverables
+## **Installation**
 
-- **Functional React Application**
+1. Clone the repository:
 
-  - A working React app that fetches podcast data from an external API on initial load.
-  - The app renders a grid of podcast previews using reusable components.
+```bash```
 
-- **Loading, Error, and Empty States**
+git clone "https://github.com/yourusername/podcast-explorer.git";
 
-  - A clear loading indicator is displayed while fetching data.
-  - Meaningful error or empty state messaging is shown if the fetch fails or returns no results.
+2.  Navigate into the project directory:
 
-- **Podcast Preview Card Component**
+cd podcast-explorer
 
-  - A reusable component that displays:
-    - Podcast image
-    - Podcast title
-    - Number of seasons
-    - Genre tags
-    - Last updated date in a human-readable format (e.g., "3 days ago")
 
-- **Responsive Layout**
+3.  Install dependencies:
 
-  - Grid layout that adapts to mobile, tablet, and desktop screen sizes using responsive design principles.
+npm install
 
-- **Codebase**
-  - Clean, modular code with clearly separated components.
-  - All major functions and modules documented with **JSDoc** comments.
-  - Consistent formatting across JavaScript, JSX, HTML, and CSS files.
+
+4.  Start the development server:
+
+npm run dev
+
+
+Open your browser at http://localhost:5173
+
+## Usage
+
+Browse podcasts directly on the homepage.
+
+Each podcast card displays its genres, number of seasons, and last updated date.
+
+Genres are resolved via the GenreService to provide readable names instead of IDs.
+
+## Project Structure
+src/
+│
+├─ api/
+│  └─ fetchPodcasts.js          # Handles fetching podcasts from the Netlify API
+│
+├─ components/
+│  ├─ Header.jsx                # App header with title
+│  ├─ PodcastCard.jsx           # Individual podcast card
+│  ├─ PodcastGrid.jsx           # Grid layout for podcasts
+│  └─ *.module.css              # Component-level styles
+│
+├─ context/
+│  └─ PodcastContext.jsx        # Context provider for podcasts and global state
+│
+├─ data/
+│  └─ data.js                   # Local genre definitions for mapping IDs
+│
+├─ services/
+│  └─ GenreService.js           # Maps genre IDs to names
+│
+├─ utils/
+│  └─ formatDate.js             # Converts ISO dates to readable strings
+│
+├─ App.jsx                      # Root component
+├─ App.module.css                # Global app styles
+├─ index.css                     # Base styles
+└─ main.jsx                      # Entry point
+
+## Components
+## Header
+
+Displays the app title and logo emoji 🎙️
+
+Styled with flexbox and a subtle shadow
+
+## PodcastGrid
+
+Consumes podcasts from context
+
+Handles loading, error, and empty states
+
+Maps genre IDs to names using the GenreService
+
+## PodcastCard
+
+Shows cover image, title, seasons, genres, and last updated date
+
+Uses formatDate utility for human-readable dates
+
+Styled for hover effects, badges, and responsive display
+
+## Utilities & Services
+
+GenreService.js: Maps numeric genre IDs to readable names.
+
+formatDate.js: Converts ISO date strings to MMM DD, YYYY format.
+
+## Styling
+
+Component-level styling with CSS modules for Header, PodcastCard, and PodcastGrid
+
+Global styles in App.module.css and index.css
+
+Responsive design with grid layout for podcasts
+
+Loading spinner animation using CSS keyframes
+
+## API
+
+Podcasts are fetched from: https://podcast-api.netlify.app/
+
+Genre IDs are resolved using local data (data.js / GenreService.js) instead of the API to avoid unreliable endpoints
