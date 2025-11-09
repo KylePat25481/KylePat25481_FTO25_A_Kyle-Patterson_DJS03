@@ -1,20 +1,19 @@
-import { useContext } from "react";
-import { PodcastContext } from "../context/PodcastContext";
-import { PodcastCard } from "./PodcastCard";
+import React from "react";
+import PodcastCard from "./PodcastCard.jsx";
 import styles from "./PodcastGrid.module.css";
 
 /**
- * @component PodcastGrid
- * @description Displays a responsive grid of podcast previews.
+ * PodcastGrid Component
+ * Displays a grid of PodcastCard components
  */
-export function PodcastGrid() {
-  const { paginatedPodcasts } = useContext(PodcastContext);
-
+export default function PodcastGrid({ podcasts, genres }) {
   return (
-    <section className={styles.grid}>
-      {paginatedPodcasts.map((podcast) => (
-        <PodcastCard key={podcast.id} podcast={podcast} />
-      ))}
+    <section className={styles.gridSection}>
+      <div className={styles.grid}>
+        {podcasts.map((podcast) => (
+          <PodcastCard key={podcast.id} podcast={podcast} genres={genres} />
+        ))}
+      </div>
     </section>
   );
 }
