@@ -1,58 +1,57 @@
-import { useEffect, useContext } from "react";
-import { PodcastContext } from "./context/PodcastContext";
-import { fetchPodcasts } from "./api/fetchPodcasts";
-import { PodcastGrid } from "./components/PodcastGrid";
-import { Pagination } from "./components/Pagination";
-import { Header } from "./components/Header";
-import styles from "./App.module.css";
+import React, { useEffect, useState } from "react";
+import Header from "./components/Header.jsx";
+import PodcastGrid from "./components/PodcastGrid.jsx";
+import "./index.css";
 
 /**
- * @component App
- * @description Main application component that fetches podcasts on load and displays them in a responsive grid.
+ * App Component
+ * Fetches podcasts from API and renders header + grid
  */
 export default function App() {
-  const { podcasts, setPodcasts, loading, setLoading, error, setError } =
-    useContext(PodcastContext);
+  const [podcasts, setPodcasts] = useState([]);
+  const [genres, setGenres] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    /**
-     * Fetch podcast data from external API on initial load.
-     */
-    const getPodcasts = async () => {
-      setLoading(true);
-      setError(null);
+    async function fetchPodcasts() {
       try {
-        const data = await fetchPodcasts();
-        if (data.length > 0) {
-          setPodcasts(data);
-        } else {
-          setError("No podcasts found.");
-        }
+        const [podcastRes, genreRes] = await Promise.all([
+          fetch("https://podcast-api.netlify.app/"),
+          fetch("https://podcast-api.netlify.app/genres")
+        ]);
+
+        if (!podcastRes.ok || !genreRes.ok) throw new Error("Failed to fetch data");
+
+        const podcastData = await podcastRes.json();
+        const genreData = await genreRes.json();
+
+        // Convert array of genre objects into map for easier lookup
+        const genreMap = {};
+        genreData.forEach((g) => {
+          genreMap[g.id] = g.title;
+        });
+
+        setPodcasts(podcastData);
+        setGenres(genreMap);
       } catch (err) {
-        setError("Failed to load podcasts. Please try again later.");
+        setError(err.message);
       } finally {
         setLoading(false);
       }
-    };
+    }
 
-    getPodcasts();
-  }, [setPodcasts, setLoading, setError]);
+    fetchPodcasts();
+  }, []);
+
+  if (loading) return <p className="status">Loading podcasts...</p>;
+  if (error) return <p className="status error">{error}</p>;
+  if (podcasts.length === 0) return <p className="status">No podcasts found.</p>;
 
   return (
-    <div className={styles.app}>
+    <div>
       <Header />
-
-      {loading && <p className={styles.message}>Loading podcasts...</p>}
-
-      {error && !loading && <p className={styles.error}>{error}</p>}
-
-      {!loading && !error && podcasts.length === 0 && (
-        <p className={styles.message}>No podcasts available.</p>
-      )}
-
-      {!loading && !error && podcasts.length > 0 && <PodcastGrid />}
-
-      {!loading && !error && podcasts.length > 0 && <Pagination />}
+      <PodcastGrid podcasts={podcasts} genres={genres} />
     </div>
   );
 }
