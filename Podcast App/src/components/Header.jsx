@@ -1,10 +1,5 @@
 import styles from "./Header.module.css";
-
-/**
- * @component Header
- * @description Displays the main app title.
- */
-export function Header() {
+export default function Header() {
   return (
     <header className={styles.appHeader}>
       <h1>🎙️ Podcast App</h1>
