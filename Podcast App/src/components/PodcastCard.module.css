@@ -1,59 +1,64 @@
-.tags {
-  margin: 0.5rem 0;
-}
-
-.tag {
-  background: #eee;
-  padding: 0.3rem 0.6rem;
-  margin-right: 0.5rem;
-  margin-top: 0.5rem;
-  border-radius: 4px;
-  display: inline-block;
-  font-size: 0.8rem;
-}
 .card {
-  background: white;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: transform 0.2s;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .card:hover {
-  transform: scale(1.02);
+  transform: translateY(-5px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
 
-.card img {
+.image {
   width: 100%;
-  border-radius: 6px;
+  height: 200px;
+  object-fit: cover;
 }
 
-.card h3 {
-  margin: 0.5rem 0;
+.details {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
 }
 
-.card p {
-  margin: 0px;
-  font-size: 0.8rem;
-  color: var(--grey-text);
+.title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 0.3rem;
 }
 
-.genre-container {
+.seasons {
+  font-size: 0.95rem;
+  color: #777;
+  margin-bottom: 0.8rem;
+}
+
+.genreContainer {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 8px 0;
-}
-.genre-badge {
-  background: #f0f0f0;
-  border-radius: 12px;
-  padding: 4px 10px;
-  font-size: 0.85rem;
-  color: #333;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-.updatedText {
+.genreBadge {
+  background-color: #eef1f6;
+  border: 1px solid #d0d4dc;
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.6rem;
   font-size: 0.8rem;
-  color: var(--grey-text);
+  color: #333;
+  font-weight: 500;
+}
+
+.updated {
+  font-size: 0.85rem;
+  color: #666;
 }
