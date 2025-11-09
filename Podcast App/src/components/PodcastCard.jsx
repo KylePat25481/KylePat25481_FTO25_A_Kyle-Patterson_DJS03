@@ -1,39 +1,38 @@
-import { useContext } from "react";
-import { PodcastContext } from "../context/PodcastContext";
-import { formatDate } from "../utils/formatDate";
-import { getGenreNames } from "../utils/GenreService";
+import React from "react";
+import { formatDate } from "../utils/formatDate.js";
 import styles from "./PodcastCard.module.css";
 
 /**
-  * @param {Object} props
- * @param {Object} props.podcast - The podcast data object to display.
- * @param {string} props.podcast.id - Unique ID of the podcast.
- * @param {string} props.podcast.title - Title of the podcast.
- * @param {string} props.podcast.image - URL of the podcast image.
- * @param {number} props.podcast.seasons - Number of seasons available.
- * @param {string} props.podcast.updated - ISO date string for the last update.
- * @param {Array<Object>} props.genres - Array of genre objects for mapping IDs to titles.
- *
- * @returns {JSX.Element} The rendered podcast card component.
+ * PodcastCard Component
+ * Displays a single podcast preview
  */
-export function PodcastCard({ podcast }) {
-  const { setSelectedPodcast } = useContext(PodcastContext);
-  const { image, title, seasons, genres, updated } = podcast;
-  const genreNames = getGenreNames(genres);
+export default function PodcastCard({ podcast, genres }) {
+  const formattedDate = podcast.updated
+    ? formatDate(podcast.updated)
+    : "Unknown date";
 
   return (
-    <article className={styles.card} onClick={() => setSelectedPodcast(podcast)}>
+    <div className={styles.card}>
       <img
-        src={image}
-        alt={`${title} podcast cover`}
+        src={podcast.image}
+        alt={podcast.title}
         className={styles.image}
+        loading="lazy"
       />
-      <div className={styles.info}>
-        <h2 className={styles.title}>{title}</h2>
-        <p className={styles.meta}>{seasons} Seasons</p>
-        <p className={styles.genres}>{genreNames.join(", ")}</p>
-        <p className={styles.date}>Last updated {formatDate(updated)}</p>
+      <div className={styles.details}>
+        <h3 className={styles.title}>{podcast.title}</h3>
+        <p className={styles.seasons}>{podcast.seasons} Season(s)</p>
+
+        <div className={styles.genreContainer}>
+          {podcast.genres?.map((genreId, index) => (
+            <span key={index} className={styles.genreBadge}>
+              {genres[genreId] || "Unknown"}
+            </span>
+          ))}
+        </div>
+
+        <p className={styles.updated}>Updated {formattedDate}</p>
       </div>
-    </article>
+    </div>
   );
 }
